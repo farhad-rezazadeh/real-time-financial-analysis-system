@@ -24,6 +24,15 @@ class StockDataSerializer(serializers.ModelSerializer):
 
         return super(StockDataSerializer, self).to_internal_value(data)
 
+    def to_representation(self, instance):
+        representation = super(StockDataSerializer, self).to_representation(instance)
+        datetime_str = representation['timestamp']
+        datetime_str = datetime_str.replace('Z', '+00:00')
+        datetime_obj = datetime.fromisoformat(datetime_str)
+        timestamp = datetime_obj.timestamp()
+        representation['timestamp'] = timestamp
+        return representation
+
 
 class AdditionalDataSerializer(serializers.ModelSerializer):
     class Meta:

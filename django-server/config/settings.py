@@ -40,7 +40,7 @@ DEFAULT_APPS = [
 ]
 
 LOCAL_APPS = [
-    'ingest.apps.IngestConfig'
+    'data.apps.DataConfig'
 ]
 
 THIRD_PARTY_APPS = [

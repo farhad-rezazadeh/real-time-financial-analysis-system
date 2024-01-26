@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="{% static 'django_eventstream/json2.js' %}"></script>
+    <script src="{% static 'django_eventstream/eventsource.min.js' %}"></script>
+    <script src="{% static 'django_eventstream/reconnecting-eventsource.js' %}"></script>
+</head>
+<body>
+<script>
+    async function getData() {
+        let res = await fetch('/data/stock-data/?stock_symbol={{ stock_symbol }}');
+        let data = await res.json();
+        console.log(data)
+
+        connectToStream()
+    }
+
+    function connectToStream() {
+        var uri = '/stocks/' + encodeURIComponent('{{ stock_symbol }}') + '/events/';
+        var es = new EventSource(uri);
+
+
+        es.onopen = function () {
+            console.log('*** connected');
+
+        };
+
+        es.onerror = function () {
+            console.log('*** connection lost, reconnecting...');
+        };
+
+        es.addEventListener('stock_updated', function (e) {
+            const data = JSON.parse(e.data)
+            console.log(data)
+        });
+    }
+
+    getData()
+
+
+</script>
+
+</body>
+</html>

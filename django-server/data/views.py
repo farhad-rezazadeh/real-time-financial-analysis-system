@@ -42,3 +42,8 @@ class StockDataRetrieveView(APIView):
 
 def view_chart(request, stock_symbol):
     return render(request, 'data/chart.html', context={'stock_symbol': stock_symbol})
+
+
+def stock_list(request):
+    stock_list = StockData.objects.all().values_list('stock_symbol', flat=True).distinct()
+    return render(request, 'data/stock_list.html', context={'stock_list': stock_list})

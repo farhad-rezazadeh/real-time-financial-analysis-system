@@ -3,14 +3,16 @@ from django.dispatch import receiver
 
 from django_eventstream import send_event
 
-from data.models import StockData
+from .models import StockData
+from .serializers import StockDataSerializer
 
 
 @receiver(post_save, sender=StockData)
 def post_save_handler(sender, instance, created, **kwargs):
     if created:
+        data = StockDataSerializer(instance=instance).data
         send_event(
             f'stock-{instance.stock_symbol}',
             'stock_updated',
-            {'price': instance.opening_price, 'timestamp': str(instance.timestamp)}
+            dict(data)
         )

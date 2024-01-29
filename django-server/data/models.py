@@ -1,18 +1,29 @@
 from django.db import models
 from django.db.models import JSONField
 
+STATUS_CHOICES = (
+    ("sell", "Sell Stock"),
+    ("buy", "Buy Stock")
+)
+
+
+class Stock(models.Model):
+    stock_symbol = models.CharField(max_length=10, unique=True)
+    stock_name = models.CharField(max_length=20)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=5)
+
 
 class StockData(models.Model):
-    stock_symbol = models.CharField(max_length=10)
-    opening_price = models.DecimalField(max_digits=20, decimal_places=15)  # Increased max_digits
-    closing_price = models.DecimalField(max_digits=20, decimal_places=15)  # Increased max_digits
-    high = models.DecimalField(max_digits=20, decimal_places=15)  # Increased max_digits
-    low = models.DecimalField(max_digits=20, decimal_places=15)  # Increased max_digits
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    opening_price = models.DecimalField(max_digits=20, decimal_places=15)
+    closing_price = models.DecimalField(max_digits=20, decimal_places=15)
+    high = models.DecimalField(max_digits=20, decimal_places=15)
+    low = models.DecimalField(max_digits=20, decimal_places=15)
     volume = models.BigIntegerField()
     timestamp = models.DateTimeField()
 
     def __str__(self):
-        return f"{self.stock_symbol} - {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
+        return f"{self.stock.stock_symbol} - {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
 
 
 class AdditionalData(models.Model):

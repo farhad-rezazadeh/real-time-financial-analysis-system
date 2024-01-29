@@ -4,14 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <script src="{% static 'django_eventstream/json2.js' %}"></script>
-    <script src="{% static 'django_eventstream/eventsource.min.js' %}"></script>
-    <script src="{% static 'django_eventstream/reconnecting-eventsource.js' %}"></script>
 </head>
 <body>
+
+    <ul>
+        {% for stock in stock_list %}
+            <li><a href="{% url 'data:view-chart' stock %}">{{ stock }}</a></li>
+        {% endfor %}
+    </ul>
+
 <script>
+    var stock_symbol = "{{ stock_symbol }}"
+
     async function getData() {
-        let res = await fetch('/data/stock-data/?stock_symbol={{ stock_symbol }}');
+        let res = await fetch('/data/stock-data/?stock_symbol=' + stock_symbol);
         let data = await res.json();
         console.log(data)
 
@@ -19,7 +25,7 @@
     }
 
     function connectToStream() {
-        var uri = '/stocks/' + encodeURIComponent('{{ stock_symbol }}') + '/events/';
+        var uri = '/stocks/' + encodeURIComponent(stock_symbol) + '/events/';
         var es = new EventSource(uri);
 
 

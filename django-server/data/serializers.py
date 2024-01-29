@@ -4,13 +4,19 @@ import pytz
 from django.utils import timezone
 from rest_framework import serializers
 
-from .models import StockData, AdditionalData
+from .models import Stock, StockData, AdditionalData
+
+
+class StockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stock
+        fields = "__all__"
 
 
 class StockDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockData
-        fields = ['stock_symbol', 'opening_price', 'closing_price', 'high', 'low', 'volume', 'timestamp']
+        fields = ['stock', 'opening_price', 'closing_price', 'high', 'low', 'volume', 'timestamp']
 
     def to_internal_value(self, data):
         # Convert Unix timestamp to datetime
@@ -21,6 +27,19 @@ class StockDataSerializer(serializers.ModelSerializer):
                 data['timestamp'] = aware_datetime
             except (ValueError, TypeError):
                 raise serializers.ValidationError({"timestamp": "Invalid timestamp format."})
+
+        if 'stock_symbol' in data:
+            stock_symbol = data.get('stock_symbol')
+            try:
+                stock = Stock.objects.get(stock_symbol=stock_symbol)
+            except Stock.DoesNotExist:
+                raise serializers.ValidationError({"stock_symbol": "No stock matches this symbol."})
+
+                # Add the found Stock object to the data dictionary
+            data['stock'] = stock.id
+
+            # Remove the stock_symbol key from the data dictionary
+            data.pop('stock_symbol', None)
 
         return super(StockDataSerializer, self).to_internal_value(data)
 

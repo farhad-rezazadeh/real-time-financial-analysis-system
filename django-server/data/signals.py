@@ -12,7 +12,7 @@ def post_save_handler(sender, instance, created, **kwargs):
     if created:
         data = StockDataSerializer(instance=instance).data
         send_event(
-            f'stock-{instance.stock_symbol}',
+            f'stock-{instance.stock.stock_symbol}',
             'stock_updated',
             dict(data)
         )

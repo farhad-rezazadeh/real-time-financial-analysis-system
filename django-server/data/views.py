@@ -1,10 +1,11 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import StockData
-from .serializers import AdditionalDataSerializer, StockDataSerializer
+from .models import Stock, StockData
+from .serializers import AdditionalDataSerializer, StockDataSerializer, StockSerializer
 from .utils import send_to_kafka
 
 
@@ -32,7 +33,7 @@ class StockDataRetrieveView(APIView):
         stock_symbol = request.query_params.get('stock_symbol')
 
         if stock_symbol:
-            queryset = StockData.objects.filter(stock_symbol=stock_symbol)
+            queryset = StockData.objects.filter(stock__stock_symbol=stock_symbol)
         else:
             queryset = StockData.objects.all()
 
@@ -40,10 +41,11 @@ class StockDataRetrieveView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-def view_chart(request, stock_symbol):
-    return render(request, 'data/chart.html', context={'stock_symbol': stock_symbol})
-
-
-def stock_list(request):
-    stock_list = StockData.objects.all().values_list('stock_symbol', flat=True).distinct()
-    return render(request, 'data/stock_list.html', context={'stock_list': stock_list})
+def view_chart(request, stock_symbol=None):
+    if not stock_symbol:
+        try:
+            stock_symbol = Stock.objects.first().stock_symbol
+        except:
+            return HttpResponse("no stock exist")
+    stock_list = Stock.objects.all().values_list('stock_symbol', flat=True)
+    return render(request, 'data/chart.html', context={'stock_symbol': stock_symbol, 'stock_list': stock_list})

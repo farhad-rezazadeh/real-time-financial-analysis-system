@@ -2,5 +2,8 @@ dependencies:
 - name: postgresql
   repository: file://../chart-dependency/postgresql
   version: 13.4.2
-digest: sha256:a93d35bb8b7f0c6c87803e8fc69377489b7b537e5abe3e7919e868a3f0e48e43
-generated: "2024-01-28T13:38:36.484004764+03:30"
+- name: kafka
+  repository: file://../chart-dependency/kafka
+  version: 26.8.3
+digest: sha256:9ee258e37a8f61c0d6b20f7d360a2e2b4624b1d174f642bdcca6a54357bb8eab
+generated: "2024-01-28T21:05:33.785616646+03:30"

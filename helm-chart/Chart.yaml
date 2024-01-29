@@ -10,3 +10,8 @@ dependencies:
     version: "13.4.2"
     repository: "file://../chart-dependency/postgresql"
     condition: postgresql.enabled
+
+  - name: kafka
+    version: "26.8.3"
+    repository: "file://../chart-dependency/kafka"
+    condition: kafka.enabled

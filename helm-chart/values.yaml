@@ -31,3 +31,8 @@ postgresql:
         username: "user"
         database: "db"
         password: "password"
+
+kafka:
+  listeners:
+    client:
+      protocol: PLAINTEXT

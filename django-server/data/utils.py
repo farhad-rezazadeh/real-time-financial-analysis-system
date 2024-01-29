@@ -10,7 +10,7 @@ def delivery_report(err, msg):
 
 
 def create_producer():
-    conf = {'bootstrap.servers': "localhost:9092"}  # Change as per your Kafka server configuration
+    conf = {'bootstrap.servers': "my-django-release-kafka:9092"}
     producer = Producer(conf)
     return producer
 

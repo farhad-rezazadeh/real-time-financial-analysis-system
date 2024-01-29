@@ -7,11 +7,6 @@
 </head>
 <body>
 
-    <ul>
-        {% for stock in stock_list %}
-            <li><a href="{% url 'data:view-chart' stock %}">{{ stock }}</a></li>
-        {% endfor %}
-    </ul>
 
 <script>
     var stock_symbol = "{{ stock_symbol }}"
@@ -20,6 +15,10 @@
         let res = await fetch('/data/stock-data/?stock_symbol=' + stock_symbol);
         let data = await res.json();
         console.log(data)
+
+        let res2 = await fetch('/data/stock-list/')
+        let data2 = await res2.json()
+        console.log(data2)
 
         connectToStream()
     }

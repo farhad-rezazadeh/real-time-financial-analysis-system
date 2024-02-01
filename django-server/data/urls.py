@@ -10,5 +10,5 @@ urlpatterns = [
     path('view-chart/', view_chart, name='view'),
     path('view-chart/<str:stock_symbol>/', view_chart, name='view-chart'),
     path('stock-list/', StockRetrieveView.as_view(), name='stock-list'),
-    path('stock-status-update/<str:stock_symbol>/',change_stock_status, name='stock-status')
+    path('stock-status-update/',change_stock_status, name='stock-status')
 ]

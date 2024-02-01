@@ -24,20 +24,39 @@
     }
 
     function connectToStream() {
-        var uri = '/stocks/' + encodeURIComponent(stock_symbol) + '/events/';
+        var uri = '/notification/';
         var es = new EventSource(uri);
 
 
         es.onopen = function () {
-            console.log('*** connected');
+            console.log('*** notification connected');
 
         };
 
         es.onerror = function () {
-            console.log('*** connection lost, reconnecting...');
+            console.log('*** notification connection lost, reconnecting...');
         };
 
-        es.addEventListener('stock_updated', function (e) {
+        es.addEventListener('stock_status_changed', function (e) {
+            const data = JSON.parse(e.data)
+            console.log(data)
+        });
+
+
+        var uri = '/stocks/' + encodeURIComponent(stock_symbol) + '/events/';
+        var es2 = new EventSource(uri);
+
+
+        es2.onopen = function () {
+            console.log('*** stock connected');
+
+        };
+
+        es2.onerror = function () {
+            console.log('*** stock connection lost, reconnecting...');
+        };
+
+        es2.addEventListener('stock_updated', function (e) {
             const data = JSON.parse(e.data)
             console.log(data)
         });

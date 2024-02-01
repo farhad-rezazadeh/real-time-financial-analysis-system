@@ -3,6 +3,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django_eventstream import send_event
 
 from .models import Stock, StockData
 from .serializers import AdditionalDataSerializer, StockDataSerializer, StockSerializer
@@ -55,3 +56,22 @@ def view_chart(request, stock_symbol=None):
         except:
             return HttpResponse("no stock exist")
     return render(request, 'data/chart.html', context={'stock_symbol': stock_symbol})
+
+
+def change_stock_status(request, stock_symbol):
+    try:
+        stock = Stock.objects.get(stock_symbol=stock_symbol)
+        if request.GET.get('status'):
+            stock.status = request.GET.get('status')
+            stock.save()
+            send_event(
+                'notification',
+                'stock_status_changed',
+                {'stock_symbol': stock_symbol, 'status': stock.status}
+            )
+            return HttpResponse('stock updated', status=status.HTTP_200_OK)
+        else:
+            return HttpResponse('please provide stock symbol', status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return HttpResponse("not such stock exist", status=status.HTTP_404_NOT_FOUND)

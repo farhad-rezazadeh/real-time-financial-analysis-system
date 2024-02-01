@@ -24,6 +24,9 @@ application = ProtocolTypeRouter({
         path('stocks/<stock_symbol>/events/', AuthMiddlewareStack(
             URLRouter(django_eventstream.routing.urlpatterns)
         ), { 'format-channels': ['stock-{stock_symbol}'] }),
+        path('notification/', AuthMiddlewareStack(
+            URLRouter(django_eventstream.routing.urlpatterns)
+        ), { 'channels': ['notification'] }),
         re_path(r'', get_asgi_application()),
     ]),
 })

@@ -1,6 +1,5 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
 from django_eventstream import send_event
 
 from .models import StockData

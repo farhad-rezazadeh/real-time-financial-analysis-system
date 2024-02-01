@@ -50,6 +50,7 @@ class StockDataSerializer(serializers.ModelSerializer):
         datetime_obj = datetime.fromisoformat(datetime_str)
         timestamp = datetime_obj.timestamp()
         representation['timestamp'] = timestamp
+        representation['stock'] = Stock.objects.get(id=representation['stock']).stock_symbol
         return representation
 
 

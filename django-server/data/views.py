@@ -58,20 +58,23 @@ def view_chart(request, stock_symbol=None):
     return render(request, 'data/chart.html', context={'stock_symbol': stock_symbol})
 
 
-def change_stock_status(request, stock_symbol):
+def change_stock_status(request):
     try:
+        stock_symbol = request.GET.get('stock_symbol')
+        sma = request.GET.get('sma')
+        ema = request.GET.get('ema')
+        rsi = request.GET.get('rsi')
+        action = request.GET.get('action')
         stock = Stock.objects.get(stock_symbol=stock_symbol)
-        if request.GET.get('status'):
-            stock.status = request.GET.get('status')
-            stock.save()
-            send_event(
-                'notification',
-                'stock_status_changed',
-                {'stock_symbol': stock_symbol, 'status': stock.status}
-            )
-            return HttpResponse('stock updated', status=status.HTTP_200_OK)
-        else:
-            return HttpResponse('please provide stock symbol', status=status.HTTP_400_BAD_REQUEST)
+
+        stock.status = action
+        stock.save()
+        send_event(
+            'notification',
+            'stock_status_changed',
+            {'stock_symbol': stock_symbol, 'sma': sma, 'ema': ema, 'rsi':rsi, 'status': action}
+        )
+        return HttpResponse('stock updated', status=status.HTTP_200_OK)
     except Exception as e:
         print(e)
-        return HttpResponse("not such stock exist", status=status.HTTP_404_NOT_FOUND)
+        return HttpResponse('bad request', status=status.HTTP_400_BAD_REQUEST)

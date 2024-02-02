@@ -2,15 +2,16 @@ from django.db import models
 from django.db.models import JSONField
 
 STATUS_CHOICES = (
-    ("sell", "Sell Stock"),
-    ("buy", "Buy Stock")
+    ("Sell", "Sell Stock"),
+    ("Buy", "Buy Stock"),
+    ("Hold", "Hold Stock")
 )
 
 
 class Stock(models.Model):
     stock_symbol = models.CharField(max_length=10, unique=True)
     stock_name = models.CharField(max_length=20)
-    status = models.CharField(choices=STATUS_CHOICES, max_length=5)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=5, default="Hold")
 
 
 class StockData(models.Model):

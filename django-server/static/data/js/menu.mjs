@@ -26,15 +26,15 @@ const appendComponent = (data) => {
 }
 
 const filterFunction = async (type) => {
-            
-          switch (type){
-                case "AAPL" : await chartComponent(`data/stock-data/?stock_symbol=${type}`); break
-                case "TSL" : await chartComponent(`data/stock-data/?stock_symbol=${type}`); break
-                case "GOOGL" : await chartComponent(`data/stock-data/?stock_symbol=${type}`); break
-                case "AMZN" : await chartComponent(`data/stock-data/?stock_symbol=${type}`); break
-                case "MSFT" : await chartComponent(`data/stock-data/?stock_symbol=${type}`); break
-                default : await chartComponent('data/stock-data/?format=json')
-          }
+
+            if (type)
+            {
+                chartComponent(type);
+            }
+            else
+            {
+                await chartComponent()
+            }
           
 }
 

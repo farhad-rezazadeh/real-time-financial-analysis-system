@@ -49,13 +49,8 @@ class StockRetrieveView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-def view_chart(request, stock_symbol=None):
-    if not stock_symbol:
-        try:
-            stock_symbol = Stock.objects.first().stock_symbol
-        except:
-            return HttpResponse("no stock exist")
-    return render(request, 'data/chart.html', context={'stock_symbol': stock_symbol})
+def view_chart(request):
+    return render(request, 'data/index.html')
 
 
 def change_stock_status(request):
